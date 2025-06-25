@@ -5,3 +5,4 @@
 /build/
 /.apt_generated/
 /.metadata/
+mysql-connector-j-*.jar
