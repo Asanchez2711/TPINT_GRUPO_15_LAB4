@@ -1,3 +1,8 @@
+<%@ page import="Entidades.Cliente" %>
+<%
+Cliente cliente = (Cliente) session.getAttribute("cliente");
+
+%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -66,21 +71,26 @@
 <body>
    <jsp:include page="Nav.jsp" />
     <jsp:include page="SubNav.jsp" />
+    
+    
 <div class="contenedor-padre">
     <div class="contenedor">
         <h2>Datos Personales</h2>
-        <div class="datos"><span class="etiqueta">Nombre:</span>  </div>
-        <div class="datos"><span class="etiqueta">Apellido:</span> </div>
-        <div class="datos"><span class="etiqueta">DNI:</span> </div>
-        <div class="datos"><span class="etiqueta">Email:</span> </div>
-        <div class="datos"><span class="etiqueta">Nacionalidad:</span> </div>
+        <div class="datos"><span class="etiqueta">Nombre:</span> ${cliente.nombre}  </div>
+        <div class="datos"><span class="etiqueta">Apellido: </span> ${cliente.apellido}</div>
+        <div class="datos"><span class="etiqueta">DNI:</span> ${cliente.dni}</div>
+        <div class="datos"><span class="etiqueta">Fecha de nac.:</span> ${cliente.fechaNacimiento}</div>
+        <div class="datos"><span class="etiqueta">Nacionalidad:</span> ${cliente.nacionalidad}</div>
 	</div>
 	
 	<div class="contenedor2">
-        <h2>Datos Bancarios</h2>
-        <div class="datos"><span class="etiqueta">Cuenta Bancaria:</span> </div>
-        <div class="datos"><span class="etiqueta">Saldo Disponible:</span> </div>
-        <div class="datos"><span class="etiqueta">Numeros de Tarjetas:</span> </div>
+        <h2>Contacto</h2>
+        <div class="datos"><span class="etiqueta">Teléfono:</span> ${cliente.telefono} </div>
+        <div class="datos"><span class="etiqueta">Email:</span> ${cliente.mail} </div>
+        <div class="datos"><span class="etiqueta">Provincia:</span> ${cliente.provincia}</div>
+        <div class="datos"><span class="etiqueta">Localidad:</span> ${cliente.localidad}</div>
+        <div class="datos"><span class="etiqueta">Direccion:</span> ${cliente.direccion}</div>
+        
     </div>
 </div>    
 

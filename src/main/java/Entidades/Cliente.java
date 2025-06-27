@@ -152,7 +152,7 @@ public class Cliente {
     }
 
     public String getMail() {
-        return mail;
+        return this.mail;
     }
 
     public void setMail(String mail) {

@@ -38,7 +38,7 @@
                         <td class="d-flex gap-2">
                             <button class="btn btn-success btn-sm">Autorizar</button>
                             <button class="btn btn-danger btn-sm">Rechazar</button>
-                            <button class="btn btn-info btn-sm">Ver Ficha</button>
+                             <a href="FichaCliente.jsp?idCliente=1" class="btn btn-info btn-sm">Ver Ficha</a>
                             
                         </td>
                     </tr>

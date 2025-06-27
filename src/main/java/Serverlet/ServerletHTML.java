@@ -1,6 +1,9 @@
 package Serverlet;
 
+
+
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import Dao.DaoCliente;
+import Entidades.Cliente;
+import Entidades.Cuentas;
 import Entidades.Usuario;
 import Negocio.NegocioCliente;
 import NegocioImp.NegocioClienteImp;
@@ -49,10 +54,6 @@ public class ServerletHTML extends HttpServlet {
 			return;
 		}
 		
-		if(request.getParameter("btnTransferir")!=null) {
-			eventobtnTransferir(request, response);
-			return;
-		}
 		
 		if(request.getParameter("btnIniciar")!=null) {
 			eventobtnIniciar(request, response);
@@ -62,32 +63,6 @@ public class ServerletHTML extends HttpServlet {
 		
 	}
 	
-	public void eventobtnTransferir( HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException{
-		String montoStr = request.getParameter ("txtMonto");
-		String cbuStr = request.getParameter("txtCbu");
-		
-		if(montoStr == null || montoStr.trim().isEmpty() || cbuStr == null || cbuStr.trim().isEmpty()) {
-			request.setAttribute("error", "Todos los campos son obligatorios. ");
-			request.getRequestDispatcher("Cliente/Transferencias.jsp").forward(request, response);
-			return;
-		}
-		
-		try {
-			float monto = Float.parseFloat(montoStr);
-			
-			
-			if(monto <=0) {
-				request.setAttribute("error", "El monto debe ser mayor a cero. ");
-				request.getRequestDispatcher("Cliente/Transferencias.jsp").forward(request, response);
-				return;
-			}
-			
-		}
-		catch(NumberFormatException e) {
-			request.setAttribute("error", "Formato inválido en alguno de los campos. ");
-			request.getRequestDispatcher("Cliente/Transferencias.jsp").forward(request, response);
-		}
-	}
 	
 	public void eventobtnSolicitar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    String montoStr = request.getParameter("txtMonto");
@@ -143,7 +118,18 @@ public class ServerletHTML extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("usuario", usuario);
 			if(usuario.getTipoUsuario() == 2) {
+				
+				DaoCliente daoCliente = new DaoCliente();
+				
+				Cliente cliente = daoCliente.obtenerClientePorUsuario(usuario.getId());
+				System.out.println("ID del cliente: " + cliente.getIdCliente());
+				List<Cuentas> cuentas = daoCliente.obtenerCuentasPorCliente(cliente.getIdCliente());
+				System.out.println("Cliente obtenido: " + (cliente != null ? cliente.getNombre() : "NULL"));
+			
+				session.setAttribute("cliente", cliente);
+				session.setAttribute("cuentas", cuentas);
 				request.getRequestDispatcher("/Cliente/MenuCliente.jsp").forward(request, response);
+				
 			}else if (usuario.getTipoUsuario()==1) {
 				request.getRequestDispatcher("/Administrador/MenuAdministrador.jsp").forward(request, response);
 			}

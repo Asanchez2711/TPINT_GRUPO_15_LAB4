@@ -1,3 +1,6 @@
+<%@ page import="java.util.List" %>
+<%@ page import="Dao.DaoCliente" %>
+<%@ page import="Entidades.Cliente" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -21,7 +24,7 @@
 			if (mensaje != null) {
 		%>
 			<div class="alert <%= mensaje.equals("ok") ? "alert-success" : "alert-danger" %> alert-dismissible fade show" role="alert">
-				<%= mensaje.equals("ok") ? "Cliente agregado correctamente." : "Ocurrió un error al agregar el cliente." %>
+				<%= mensaje.equals("ok") ? "Cliente agregado correctamente." : "Ocurriï¿½ un error al agregar el cliente." %>
 				<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
 			</div>
 		<%
@@ -32,40 +35,49 @@
 			<thead class="table-dark">
 				<tr>
 					<th>Nombre y Apellido</th>
-					<th>Dirección</th>
+					<th>Direcciï¿½n</th>
 					<th>DNI</th>
 					<th>Activo</th>
 					<th>Acciones</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>Ezequiel Lopez</td>
-					<td>Av. Siempre Viva 123</td>
-					<td>40123456</td>
-					<td><span class="badge bg-success">Sí</span></td>
-					<td><a href="Prestamos.jsp" class="btn btn-primary">Ver Detalle</a></td>
-				</tr>
-				<tr>
-					<td>Juan Perez</td>
-					<td>Calle Falsa 456</td>
-					<td>38965432</td>
-					<td><span class="badge bg-danger">No</span></td>
-					<td><a href="Prestamos.jsp" class="btn btn-primary">Ver Detalle</a></td>
-				</tr>
-				<tr>
-					<td>Ana Gomez</td>
-					<td>Av. Libertador 789</td>
-					<td>42567890</td>
-					<td><span class="badge bg-success">Sí</span></td>
-					<td><a href="Prestamos.jsp" class="btn btn-primary">Ver Detalle</a></td>
-				</tr>
+				<%
+					DaoCliente dao = new DaoCliente();
+					List<Cliente> listaClientes = dao.obtenerClientes();
+
+					if (listaClientes != null && !listaClientes.isEmpty()) {
+						for (Cliente c : listaClientes) {
+				%>
+					<tr>
+						<td><%= c.getNombre() %> <%= c.getApellido() %></td>
+						<td><%= c.getDireccion() %></td>
+						<td><%= c.getDni() %></td>
+						<td>
+							<span class="badge <%= c.isActivo() ? "bg-success" : "bg-danger" %>">
+								<%= c.isActivo() ? "Sï¿½" : "No" %>
+							</span>
+						</td>
+						<td>
+							<a href="Prestamos.jsp?idCliente=<%= c.getIdCliente() %>" class="btn btn-primary">Ver Detalle</a>
+						</td>
+					</tr>
+				<%
+						}
+					} else {
+				%>
+					<tr><td colspan="5">No hay clientes cargados.</td></tr>
+				<%
+					}
+				%>
 			</tbody>
 		</table>
 
+		<!-- Botï¿½n para mostrar el modal -->
 		<button type="button" class="btn btn-success" data-bs-toggle="modal"
 			data-bs-target="#modalAgregarCliente">Agregar</button>
 
+		<!-- Modal para agregar cliente -->
 		<div class="modal fade" id="modalAgregarCliente" tabindex="-1"
 			aria-labelledby="labelAgregarCliente" aria-hidden="true">
 			<div class="modal-dialog modal-lg">
@@ -82,7 +94,7 @@
 									<input type="text" class="form-control" name="usuario" required>
 								</div>
 								<div class="col-md-6 mb-3">
-									<label>Contraseña:</label>
+									<label>ContraseÃ±a:</label>
 									<input type="password" class="form-control" name="password" required>
 								</div>
 								<div class="col-md-6 mb-3">
@@ -126,15 +138,15 @@
 									<input type="text" class="form-control" name="localidad" required>
 								</div>
 								<div class="col-md-6 mb-3">
-									<label>Dirección:</label>
+									<label>Direcciï¿½n:</label>
 									<input type="text" class="form-control" name="direccion" required>
 								</div>
 								<div class="col-md-6 mb-3">
-									<label>Correo electrónico:</label>
+									<label>Correo electrï¿½nico:</label>
 									<input type="email" class="form-control" name="mail" required>
 								</div>
 								<div class="col-md-6 mb-3">
-									<label>Teléfono:</label>
+									<label>Telï¿½fono:</label>
 									<input type="text" class="form-control" name="telefono" required>
 								</div>
 							</div>

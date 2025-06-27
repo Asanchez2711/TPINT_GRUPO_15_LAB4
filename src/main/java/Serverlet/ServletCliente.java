@@ -13,13 +13,18 @@ import Negocio.NegocioCliente;
 import NegocioImp.NegocioClienteImp;
 import Otros.enmTipos;
 
-@WebServlet("/AltaCliente")
+
 public class ServletCliente extends HttpServlet {
     private static final long serialVersionUID = 1L; // Añadir un serialVersionUID
 
     private NegocioCliente negocio;
     
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	
+    	if(request.getParameter("btnTransferir")!=null) {
+			eventobtnTransferir(request, response);
+			return;
+		}
         // 1. Obtener los parámetros del formulario
         String usuario = request.getParameter("usuario");
         String password = request.getParameter("password");
@@ -96,4 +101,70 @@ public class ServletCliente extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/Administrador/Clientes.jsp?mensaje=errorProcesamiento");
         }
     }
+    
+    public void eventobtnTransferir( HttpServletRequest request,HttpServletResponse response) throws ServletException, IOException{
+		String montoStr = request.getParameter ("txtMonto");
+		String cbuStr = request.getParameter("txtCbu");
+		String cuentaEmisorStr = request.getParameter("Cuenta");
+		String descripcion = request.getParameter("txtDescripcion");
+		
+		if(montoStr == null || montoStr.trim().isEmpty() || cbuStr == null 
+		|| cbuStr.trim().isEmpty() || cuentaEmisorStr == null || cuentaEmisorStr.trim().isEmpty()) {
+			
+			
+			request.setAttribute("error", "Todos los campos son obligatorios. ");
+			request.getRequestDispatcher("Cliente/Transferencias.jsp").forward(request, response);
+			return;
+		}
+		
+		try {
+			float monto = Float.parseFloat(montoStr);
+			int cuentaEmisorID = Integer.parseInt(cuentaEmisorStr);
+			
+			if(monto <=0) {
+				request.setAttribute("error", "El monto debe ser mayor a cero. ");
+				request.getRequestDispatcher("Cliente/Transferencias.jsp").forward(request, response);
+				return;
+			}
+	        NegocioCliente negocio = new NegocioClienteImp();
+	        int cuentaReceptorID = negocio.obtenerIdCuentaPorCBU(cbuStr);
+	        
+	        if(cuentaReceptorID == 0) {
+	        	request.setAttribute("error", "CBU no válido o cuenta inexistente.");
+	            request.getRequestDispatcher("Cliente/Transferencias.jsp").forward(request, response);
+	            return;
+	        }
+	        
+	        int numeroMovimiento = 9; 
+	        java.sql.Date fechaActual = new java.sql.Date(System.currentTimeMillis());
+	        boolean pudo = negocio.registrarTransferencia(cuentaEmisorID, cuentaReceptorID, numeroMovimiento, monto, descripcion, fechaActual);
+	        if(pudo) {
+	            request.setAttribute("mensaje", "Transferencia realizada con éxito.");
+	            HttpSession session = request.getSession(false);
+	            if (session != null) {
+	                Integer clienteId = (Integer) session.getAttribute("clienteId"); 
+	                if (clienteId != null) {
+	                    java.util.List<?> cuentas = negocio.obtenerCuentasPorCliente(clienteId);
+	                    session.setAttribute("cuentas", cuentas);
+	                    request.setAttribute("cuentas", cuentas); // Actualiza también el request
+	                }
+	            }
+	        }
+	        
+	        else {request.setAttribute("error", "Error al realizar transferencia, revisar limite de cuenta.");}
+	        
+	        request.getRequestDispatcher("Cliente/Transferencias.jsp").forward(request, response);
+	        
+	        
+		}
+		catch(NumberFormatException e) {
+			request.setAttribute("error", "Formato inválido en alguno de los campos. ");
+			request.getRequestDispatcher("Cliente/Transferencias.jsp").forward(request, response);
+		}catch(Exception e) {
+			e.printStackTrace();
+			request.setAttribute("error", "Ocurrió un error inesperado.");
+	        request.getRequestDispatcher("Cliente/Transferencias.jsp");
+		}
+	}
+    
 }

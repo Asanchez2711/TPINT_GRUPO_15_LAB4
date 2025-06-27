@@ -6,6 +6,10 @@ import Negocio.NegocioCliente;
 import NegocioImp.NegocioClienteImp;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+import Dao.DaoUsuario;
 
 public class Principal {
 
@@ -13,19 +17,15 @@ public class Principal {
 	//Main nomas para probar el negocio
 	public static void main(String[] args) {
 		
-//		Usuario usr = new Usuario(0, "asg", "Roque123", enmTipos.UsrCliente.valor, true);
-//		
-//		Cliente clt = new Cliente(usr, 0, "4541", "51541", "Sa", "Ja", "Masculino", "Argentino", LocalDate.parse("1997-05-20"), LocalDate.now(),"Buenos aires", "Tigre", "Italia1111", "ej", "12", true);
-//		
-		NegocioCliente ng = new NegocioClienteImp();
-//		
-//		boolean a = ng.registrarCliente(clt);
-//		
-//		System.out.println(a);
-		
-		Usuario testcst = ng.obtieneUsuario("asg", "Roque123");
-		
-		System.out.println(testcst);
+		DaoUsuario dao = new DaoUsuario();
+		List<Map<String, Object>> informe = dao.informePorcentajeProvincias();
+
+		for (Map<String, Object> fila : informe) {
+		    System.out.println("Provincia: " + fila.get("Provincia"));
+		    System.out.println("Cantidad: " + fila.get("Cantidad"));
+		    System.out.println("Porcentaje: " + fila.get("Porcentaje"));
+		    System.out.println("----");
+		}
 		
 
 	}	

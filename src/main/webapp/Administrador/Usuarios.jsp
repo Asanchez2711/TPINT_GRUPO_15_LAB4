@@ -7,6 +7,10 @@
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="../css/Estilo.css">
+<%@ page import="java.util.*, Entidades.Usuario"%>
+<%
+List<Usuario> usuarios = (List<Usuario>) request.getAttribute("usuarios");
+%>
 </head>
 <body>
 
@@ -83,12 +87,31 @@
 			</tr>
 
 			<tbody>
-
+				<%
+				if (usuarios != null && !usuarios.isEmpty()) {
+					for (Usuario u : usuarios) {
+				%>
+				<tr>
+					<td><%=u.getId()%></td>
+					<td><%=u.getUsuario()%></td>
+					<td>email@demo.com</td>
+					<!-- Cambiar si tenés campo email -->
+					<td><%=u.getTipoUsuario() == 1 ? "Administrador" : "Usuario"%></td>
+					<td><%=u.isActivoOK() ? "Activo" : "Inactivo"%></td>
+					<td>
+						<button class="btn btn-warning">Editar</button>
+						<button class="btn btn-danger">Dar Baja</button>
+					</td>
+				</tr>
+				<%
+				}
+				} else {
+				%>
 				<tr>
 					<td colspan="6">No hay usuarios para mostrar.</td>
 				</tr>
 				<%
-
+				}
 				%>
 			</tbody>
 		</table>

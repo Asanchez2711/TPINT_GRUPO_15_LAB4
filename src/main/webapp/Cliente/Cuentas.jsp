@@ -1,3 +1,12 @@
+<%@ page import="Entidades.Cuentas" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Iterator" %>
+
+
+<%
+	@SuppressWarnings("unchecked")
+    List<Cuentas> cuentas = (List<Cuentas>) session.getAttribute("cuentas");
+%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -12,29 +21,39 @@
 <jsp:include page="SubNav.jsp" />
 
 <div class="container-cuentas">
-<h2>Cuentas</h2>
+
+<%
+    if (cuentas != null) {%>
+    	<h2>Cuentas</h2>
+       <% for (Cuentas c : cuentas) {
+%>
+
 
 	<div class="Cuentas">
 		<ul class="Cuentas-items">
-		<li>Caja de ahorro en pesos</li>
-		<li>121-223551/2</li>
-		<li>Moneda: Pesos</li>
-		<li>$10.000</li>
-		<li>CBU: 00011122333112223</li>	
+		<li>
+				<%
+                    if (c.getTipocuenta() == 1) {
+                        out.print("Caja de ahorro en pesos");
+                    } else if (c.getTipocuenta() == 2) {
+                        out.print("Cuenta corriente en pesos");
+                    } else {
+                        out.print("Tipo desconocido");
+                    }
+                %>
+		</li>
+		<li><%= c.getNumero() %></li>
+            <li>Moneda: Pesos</li>
+            <li>$<%= c.getSaldo() %></li>
+            <li>CBU: <%= c.getCbu() %></li>
 		</ul>
-		<a href="MovimientosCliente.jsp">Ver movimientos</a>
+		
+		<a href="MovimientosCliente.jsp?idCuenta=<%= c.getIdCuenta() %>">Ver movimientos</a>
 	</div>
-	
-	<div class="Cuentas">
-		<ul class="Cuentas-items">
-		<li>Cuenta corriente en pesos</li>
-		<li>121-20262/8</li>
-		<li>Moneda: Pesos</li>
-		<li>$10.000</li>
-		<li>CBU: 11120033321122233321</li>	
-		</ul>
-		<a href="MovimientosCliente.jsp">Ver movimientos</a>
-	</div>
+<%
+        }
+    }
+%>
 
 
 </div>

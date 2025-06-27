@@ -15,4 +15,14 @@
     <servlet-name>ServerletHTML</servlet-name>
     <url-pattern>/ServerletHTML</url-pattern>
 </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ServletCliente</servlet-name>
+    <servlet-class>Serverlet.ServletCliente</servlet-class>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>ServletCliente</servlet-name>
+    <url-pattern>/ServletCliente</url-pattern>
+</servlet-mapping>
 </web-app>
